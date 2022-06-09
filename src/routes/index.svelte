@@ -1,60 +1,28 @@
-<script context="module">
-  export const prerender = true;
-</script>
-
 <script>
-  import Counter from '$lib/Counter.svelte';
+    import { pokemon } from "../stores/pokemart.js";
+    import PokemanCard from "../components/pokemanCard.svelte"
+    console.log($pokemon)
+
+    let searchTerm = "";
+    let filteredPokemon = [];
+
+    $: {
+        console.log(searchTerm);
+        if(searchTerm){
+            //Catch Pokemon
+            filteredPokemon = $pokemon.filter(pokeman => pokeman.name.toLowerCase().includes(searchTerm.toLowerCase()));
+        }else{
+            filteredPokemon = [... $pokemon]
+        }
+    }
 </script>
-
 <svelte:head>
-  <title>Home</title>
-  <meta name="description" content="Svelte demo app" />
+    <title>Svelte Kit Pokedex</title>
 </svelte:head>
-
-<section>
-  <h1>
-    <div class="welcome">
-      <picture>
-        <source srcset="svelte-welcome.webp" type="image/webp" />
-        <img src="svelte-welcome.png" alt="Welcome" />
-      </picture>
-    </div>
-
-    to your new<br />SvelteKit app
-  </h1>
-
-  <h2>
-    try editing <strong>src/routes/index.svelte</strong>
-  </h2>
-
-  <Counter />
-</section>
-
-<style>
-  section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-  }
-
-  h1 {
-    width: 100%;
-  }
-
-  .welcome {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding: 0 0 calc(100% * 495 / 2048) 0;
-  }
-
-  .welcome img {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    display: block;
-  }
-</style>
+<h1 class="text-4xl text-center my-8">Svelte Kit Pokedex</h1>
+<input class="w-full rounded-md text-lg p-4 border-2 border-gray-200" type="text" bind:value={searchTerm} placeholder="Search Pokemon">
+<div class=" py-4 grid gap-4 md:grid-cols-2 grid-cols-1">
+    {#each  filteredPokemon as pokeman }
+    <PokemanCard pokeman={pokeman}/>
+{/each}
+</div>
